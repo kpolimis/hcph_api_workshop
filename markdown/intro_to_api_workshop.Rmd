@@ -170,7 +170,7 @@ JSON (JavaScript Object Notation) is a lightweight data-interchange format.
   
 # What is JSON?
 
-```{r json_example, warning=FALSE, eval=FALSE, include=FALSE}
+```{r json_example1, warning=FALSE, eval=TRUE}
 #'from:  https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html
 library(jsonlite)
 json <-
@@ -180,6 +180,7 @@ json <-
   {},
   {"Name" : "Bowser", "Occupation" : "Koopa"}
 ]'
+
 prettify(json, indent = 4)
 ```
 
@@ -433,7 +434,6 @@ https://www.airnow.gov/aqi/aqi-basics/
 
 ![](../images/air_quality_index.png){height=1500px; width=1200px}   
 
-
 # R's AirSensor Package
 
 https://github.com/MazamaScience/AirSensor
@@ -525,7 +525,9 @@ initializeMazamaSpatialUtils() # initialize the package
 Now we create the `pas` object and save it into an .rda file. This can take up to a minute to process. 
 
 ```{r create_pas_au, warning=F, message=F, eval=TRUE}
-# pas_au <- pas_createNew(countryCodes = "AU", includePWFSL = TRUE) # Download, parse and enhance synoptic data from PurpleAir and return the results as a useful tibble with class pa_synoptic.
+#' Download, parse and enhance synoptic data from PurpleAir
+#' and return the results as a useful tibble with class pa_synoptic
+# pas_au <- pas_createNew(countryCodes = "AU", includePWFSL = TRUE) 
 
 # saving and loading the downloaded local file
 # save(pas_au, file = here("data", "pas_au.rda")) # save the synoptic data into an .rda file
@@ -562,6 +564,7 @@ pas_leaflet(pas_au)
 ```
 
 # View a *pas* map
+
 ```{r pas_tx_leaflet, warning=F, message=F, eval=TRUE}
 pas_leaflet(pas_tx)
 ```
@@ -577,7 +580,10 @@ pas_au %>%
   pas_leaflet(parameter = "humidity")
 ```
 
+# View a *pas* map
+
 **Use your `pas` object on US, map the hourly PM2.5 data in Texas**
+
 ```{r}
 pas_tx %>% 
   pas_leaflet(parameter = "pm25_1hr") 
@@ -599,6 +605,7 @@ https://en.wikipedia.org/wiki/ThingSpeak
 Let’s look at data from multiple sensors in the Sydney area and one from Brisbane (north of Sydney) for the time period covering the Australian wildfires, December 2019 to January 2020. 
 
 # Load time series data for a sensor
+
 ```{r specific_sensor_example1, warning=F, message=F, eval=TRUE}
 gymea_bay_label <- c("Gymea Bay") # Gymea Bay, Sydney, AU (southern Sydney)
 north_sydney_label <- c("Glen Street, Milson’s Point, NSW, Australia") # North Sydney, AU
@@ -692,7 +699,6 @@ pat_houston %>%
 
 save(pat_houston, file = here("data", "pat_houston.rda")) # save the synoptic data into an .rda file
 ```
-
 
 # Explore the *pas* object
 
