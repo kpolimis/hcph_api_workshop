@@ -78,15 +78,16 @@ always_allow_html: yes
 
 # 2. What is an API?
 
-Application Programming Interface (API)[^1]
+* adapted from [Amazon Web Services](https://aws.amazon.com/what-is/api/)
+
+Application Programming Interface (API)
 
 > "APIs are mechanisms that enable two software components to communicate with each other using a set of definitions and protocols. For example, the weather bureau’s software system contains daily weather data. The weather app on your phone 'talks' to this system via APIs and shows you daily weather updates on your phone." - [Amazon Web Services](https://aws.amazon.com/what-is/api/)
 
 In plain English, an API is a standard way for developers to communicate with software applications to request and send data. An API is composed of 
+
 1. formal syntax that governs communication between software and
 2. the software itself
-
-[^1]: adapted from [Amazon Web Services](https://aws.amazon.com/what-is/api/)
 
 # What is an API?
 
@@ -100,7 +101,7 @@ In plain English, an API is a standard way for developers to communicate with so
 
 # Why use an API (Business Case)
 
-* adapted from: https://enterprisersproject.com/article/2018/11/how-explain-apis-plain-english?sc_cid=701f2000000tpAgAAI&page=0%2C1%2C0
+* adapted from: [The Enterprisers Project](https://enterprisersproject.com/article/2018/11/how-explain-apis-plain-english?sc_cid=701f2000000tpAgAAI&page=0%2C1%2C0)
 
 1. APIs cut down on development time and costs
 
@@ -169,6 +170,13 @@ JSON (JavaScript Object Notation) is a lightweight data-interchange format.
   + JSON is a text format that is completely language independent but uses conventions that are familiar to programmers of the C-family of languages, including C, C++, C#, Java, JavaScript, Perl, Python, and many others
   
 # What is JSON?
+
+```{r install, warning=FALSE, eval=TRUE, include=FALSE}
+#' Uncomment the below code to install all relevant packages
+#' Run only once. 
+options(scipen=999)
+# source("code/install.R")
+```
 
 ```{r json_example1, warning=FALSE, eval=TRUE}
 #'from:  https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html
@@ -289,12 +297,6 @@ https://dev.socrata.com/docs/authentication.html
 
 # Census API Examples
 
-```{r install, warning=FALSE, eval=FALSE, include=FALSE}
-# Uncomment the below code for installation. Run only once. 
-
-# source(here("code", "install.R"))
-```
-
 ```{r rsocrata_setup, warning=F, message=F, eval=TRUE}
 library(yaml)
 library(plyr)
@@ -305,6 +307,8 @@ library(here)
 ```
 
 # Census API Examples
+
+* will only run if you have an appropriately formated filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
 
 ```{r socrata, warning=F, message=F, eval=TRUE}
 socrata_app_credentials <- yaml.load_file(here("credentials/socrata_app_credentials.yml"))
@@ -325,14 +329,54 @@ yearly_deaths_by_state_1999_2017 <- read.socrata(
 glimpse(yearly_deaths_by_state_1999_2017)
 ```
 
-
 # Census API Examples
 
 https://data.cdc.gov/resource/bi63-dtpu.json
 
 ![](../images/cdc_deaths_json.png){height=1000px; width=800px}
 
-# 4. PurpleAir API
+# Census API Examples
+
+* will only run if you have an appropriately formated filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
+
+```{r source_nchs_mortality, warning=F, message=F, eval=TRUE}
+source(here("code", "01_get_nchs_mortality.R"))
+```
+
+# Census API Examples
+
+```{r us_deaths_time_series_prep, warning=F, message=F, eval=TRUE}
+library(lubridate)
+library(scales)
+library(ggplot2)
+yearly_deaths_by_state_1999_2022$all_deaths <- as.numeric(yearly_deaths_by_state_1999_2022$all_deaths)
+yearly_deaths_by_state_1999_2022$year <- ymd(paste0(yearly_deaths_by_state_1999_2022$year, "01-01"))
+end_date <- ymd("2021-01-01")
+start_date <- ymd("1999-01-01")
+us_deaths_time_series <- ggplot(data = yearly_deaths_by_state_1999_2022 %>% 
+               filter(state_name=="United States", year<ymd("2022-01-01"))) +
+  geom_point(aes(x = year, y = all_deaths, color="darkred", size=1.5)) + 
+  geom_vline(xintercept = ymd("2019-12-01"), linetype="dashed", 
+             color = "black", size=1) +  
+  scale_y_continuous(labels=comma) +
+  scale_x_date("", breaks = date_breaks("2 year"),
+               limits = c(start_date, end_date),
+               labels = date_format(format = "%Y")) + 
+  theme(legend.position="none") + 
+  labs(x = "Date", y = "Total Deaths",
+       title = "US Total Deaths over Time: 1999-2021") +
+  annotate(x=ymd("2019-12-01"),y=+Inf,label="COVID-19",vjust=1,geom="label")
+```
+
+# Census API Examples
+
+```{r us_deaths_time_series_plot, warning=F, message=F, eval=TRUE}
+print(us_deaths_time_series)
+ggsave(here("output/us_deaths_time_series.png"),
+       us_deaths_time_series, width=10.67, height=6, dpi=120)
+```
+
+# 4. PurpleAir
 
 - PurpleAir Introduction
 - PurpleAir API Introduction
@@ -343,7 +387,6 @@ https://data.cdc.gov/resource/bi63-dtpu.json
   + Working with air sensor data
 
 # PurpleAir Introduction
-
 
 * PurpleAir is a crowdsourced air monitoring service
 * Anyone can buy and install a purple air air quality sensor and hook it up to the larger system to improve monitoring your own air quality
@@ -357,7 +400,7 @@ https://www.nbcnews.com/tech/tech-news/high-tech-california-relies-startup-utah-
 
 # PurpleAir Introduction
 
-![](../images/purpleair_tweet.png){height=600px; width=400px}
+![](../images/purpleair_tweet.png){height=400px; width=300px}
 
 # PurpleAir Introduction
 
@@ -467,15 +510,15 @@ Think about the following questions:
 
 Install and load relevant packages: 
 
-* `tidyverse` for data wrangling and plotting
-* `PWFSLSmoke` for USFS monitor data access and plotting
-* `AirSensor` for PurpleAir sensor data access and plotting
-* `MazamaSpatialUtils` for spatial data download and utility functions
-* `AirMonitorPlots` for advanced plots for monitors.
+* [`tidyverse`](https://dplyr.tidyverse.org/) for data wrangling and plotting
+* [`PWFSLSmoke`](https://cran.r-project.org/web/packages/PWFSLSmoke/vignettes/PWFSLSmoke.html) for USFS monitor data access and plotting
+* [`AirSensor`](https://github.com/MazamaScience/AirSensor) for PurpleAir sensor data access and plotting
+* [`MazamaSpatialUtils`](https://github.com/MazamaScience/MazamaSpatialUtils) for spatial data download and utility functions
+* [`AirMonitorPlots`](https://github.com/MazamaScience/AirMonitorPlots) for advanced plots for monitors.
 
 # R's AirSensor Package
 
-Note that package `AirMonitorPlots` might not yet be available on CRAN. To install, try the `devtools` package:
+Note that package `AirMonitorPlots` might not yet be available on CRAN. To install, try the `devtools` package (see `code/install.R`)
 
 ```{r purpleair_setup, warning=F, message=F, eval=TRUE}
 # load all the packages
@@ -584,7 +627,7 @@ pas_au %>%
 
 **Use your `pas` object on US, map the hourly PM2.5 data in Texas**
 
-```{r}
+```{r texas_pm25_leaflet, warning=F, message=F, eval=TRUE}
 pas_tx %>% 
   pas_leaflet(parameter = "pm25_1hr") 
 ```
@@ -677,7 +720,7 @@ pat_multiplot(pat_brisbane_6th_ave)
 
 # View a *pat* timeseries
 
-* Let's use the `pas` object we generated on US to create a `pat` object on a sensor named "Royal Oaks Houston Tx - Outside" for the time period 2019-12-01 to 2020-01-31. 
+* Let's use the `pas` object we generated on US to create a `pat` object on a sensor named "Royal Oaks Houston Tx - Outside" for the time period 2020-01-01 to 2020-01-15`. 
 * Name it `pat_houston`. 
 * Plot this `pat` object. 
   + What do you find?
@@ -832,7 +875,6 @@ houston_ids <- c("26659", "133994")
 
 pas_tx %>% 
   filter(ID %in% pasadena_ids | ID %in% houston_ids)
-
 ```
 
 # Sensor State-of-Health
@@ -902,7 +944,6 @@ sensor_pollutionRose(sensor = airsensor_chisholm)
 sensor_pollutionRose(sensor = airsensor_houston)
 ```
 
-
 # 5.Conclusion
 
 ```{r save_analysis, warning=F, message=F, eval=TRUE, include=FALSE}
@@ -919,4 +960,9 @@ In this Intro to API workshop we (hopefully)
 # 6. References
 
 * [Amazon Web Services](https://aws.amazon.com/what-is/api/)
+* [Getting started with JSON and jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html)
+* [Getting started with httr](https://cran.r-project.org/web/packages/httr/vignettes/quickstart.html)
+* [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html)
+* [Introduction to PWFSLSmoke](https://cran.r-project.org/web/packages/PWFSLSmoke/vignettes/PWFSLSmoke.html)
+* [PurpleAir API](https://api.purpleair.com/)
 * Kayleigh Wilson & Jonathan Callahan, [Australia on Fire](https://mazamascience.github.io/AirSensor/articles/articles/Australia_on_fire.html)
