@@ -308,7 +308,8 @@ library(here)
 
 # Census API Examples
 
-* will only run if you have an appropriately formated filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
+* will only run if you have an appropriately formatted filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
+* see `credentials/example_socrata_app_credentials.yml` for the 3 essential fields in the .yml file
 
 ```{r socrata, warning=F, message=F, eval=TRUE}
 socrata_app_credentials <- yaml.load_file(here("credentials/socrata_app_credentials.yml"))
@@ -337,7 +338,7 @@ https://data.cdc.gov/resource/bi63-dtpu.json
 
 # Census API Examples
 
-* will only run if you have an appropriately formated filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
+* will only run if you have an appropriately formatted filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
 
 ```{r source_nchs_mortality, warning=F, message=F, eval=TRUE}
 source(here("code", "01_get_nchs_mortality.R"))
@@ -430,6 +431,8 @@ https://map.purpleair.com/1/mAQI/a10/p604800/cC0#9.72/29.785/-95.3946
 
 * https://community.purpleair.com/t/making-api-calls-with-the-purpleair-api/180
 * https://api.purpleair.com/#api-sensors-get-sensor-data
+* will only run if you have an appropriately formatted filed `credentials/purpleair_api_credentials.yml` with valid PurpleAir API credentials
+* see `credentials/example_purpleair_api_credentials.yml` for the 2 essential fields in the .yml file
 
 ```{r purpleair_api_manual, warning=F, message=F, eval=TRUE}
 require(httr)
@@ -948,6 +951,8 @@ sensor_pollutionRose(sensor = airsensor_houston)
 
 ```{r save_analysis, warning=F, message=F, eval=TRUE, include=FALSE}
 save.image(here("rdata", "intro_to_api_workshop.RData"), compress = TRUE)
+# rm(list=ls("socrata_app_credentials", "purpleair_api_credentials"))
+# knitr::purl("markdown/intro_to_api_workshop.Rmd", "code/intro_to_api_workshop.R")
 ```
 
 In this Intro to API workshop we (hopefully)
