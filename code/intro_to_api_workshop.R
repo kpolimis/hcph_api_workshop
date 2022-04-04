@@ -1,11 +1,11 @@
-## ----install, warning=FALSE, eval=TRUE, include=FALSE------------------------------------------------------------------
+## ----install, warning=FALSE, eval=TRUE, include=FALSE-------------------------------------------------------------------
 #' Uncomment the below code to install all relevant packages
 #' Run only once. 
 options(scipen=999)
 # source("code/install.R")
 
 
-## ----json_example1, warning=FALSE, eval=TRUE---------------------------------------------------------------------------
+## ----json_example1, warning=FALSE, eval=TRUE----------------------------------------------------------------------------
 #'from:  https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html
 library(jsonlite)
 json <-
@@ -19,7 +19,7 @@ json <-
 prettify(json, indent = 4)
 
 
-## ----rsocrata_setup, warning=F, message=F, eval=TRUE-------------------------------------------------------------------
+## ----rsocrata_setup, warning=F, message=F, eval=TRUE--------------------------------------------------------------------
 library(yaml)
 library(plyr)
 library(dplyr)
@@ -28,7 +28,9 @@ library(RSocrata)
 library(here)
 
 
-## ----socrata, warning=F, message=F, eval=TRUE--------------------------------------------------------------------------
+## ----socrata, warning=F, message=F, eval=TRUE---------------------------------------------------------------------------
+ #' will only run if you have an appropriately formatted file,
+ #' `credentials/socrata_app_credentials.yml` with valid CDC API credential
 socrata_app_credentials <- yaml.load_file(here("credentials/socrata_app_credentials.yml"))
 
 #' Yearly Counts of Deaths by State and Select Causes, 1999-2017
@@ -41,15 +43,17 @@ yearly_deaths_by_state_1999_2017 <- read.socrata(
 )
 
 
-## ----socrata_glimpse, warning=F, message=F, eval=TRUE------------------------------------------------------------------
+## ----socrata_glimpse, warning=F, message=F, eval=TRUE-------------------------------------------------------------------
 glimpse(yearly_deaths_by_state_1999_2017)
 
 
-## ----source_nchs_mortality, warning=F, message=F, eval=TRUE------------------------------------------------------------
+## ----source_nchs_mortality, warning=F, message=F, eval=TRUE-------------------------------------------------------------
+#' will only run if you have an appropriately formatted file, 
+#' `credentials/socrata_app_credentials.yml`, with valid CDC API credentials
 source(here("code", "01_get_nchs_mortality.R"))
 
 
-## ----us_deaths_time_series_prep, warning=F, message=F, eval=TRUE-------------------------------------------------------
+## ----us_deaths_time_series_prep, warning=F, message=F, eval=TRUE--------------------------------------------------------
 library(lubridate)
 library(scales)
 library(ggplot2)
@@ -72,13 +76,15 @@ us_deaths_time_series <- ggplot(data = yearly_deaths_by_state_1999_2022 %>%
   annotate(x=ymd("2019-12-01"),y=+Inf,label="COVID-19",vjust=1,geom="label")
 
 
-## ----us_deaths_time_series_plot, warning=F, message=F, eval=TRUE-------------------------------------------------------
+## ----us_deaths_time_series_plot, warning=F, message=F, eval=TRUE--------------------------------------------------------
 print(us_deaths_time_series)
 ggsave(here("output/us_deaths_time_series.png"),
        us_deaths_time_series, width=10.67, height=6, dpi=120)
 
 
-## ----purpleair_api_manual, warning=F, message=F, eval=TRUE-------------------------------------------------------------
+## ----purpleair_api_manual, warning=F, message=F, eval=TRUE--------------------------------------------------------------
+#' will only run if you have an appropriately formatted file,
+#' `credentials/purpleair_api_credentials.yml`, with valid PurpleAir API credentials
 require(httr)
 
 purpleair_api_credentials <- yaml.load_file(here("credentials/purpleair_api_credentials.yml"))
@@ -90,95 +96,106 @@ headers = c(
 result <- httr::GET(url = 'https://api.purpleair.com/v1/sensors/25999', httr::add_headers(.headers=headers))
 
 
-## ----purpleair_api_result, warning=F, message=F, eval=TRUE-------------------------------------------------------------
+## ----purpleair_api_result, warning=F, message=F, eval=TRUE--------------------------------------------------------------
 result
 
 
-## ----purpleair_api_manual2, warning=F, message=F, eval=TRUE------------------------------------------------------------
+## ----purpleair_api_manual2, warning=F, message=F, eval=TRUE-------------------------------------------------------------
 names(content(result))
 length(names(content(result)$sensor))
 names(content(result)$sensor)[1:20]
 
 
-## ----purpleair_api_manual3, warning=F, message=F, eval=TRUE------------------------------------------------------------
+## ----purpleair_api_manual3, warning=F, message=F, eval=TRUE-------------------------------------------------------------
 content(result)$sensor$stats
 
 
-## ----purpleair_setup, warning=F, message=F, eval=TRUE------------------------------------------------------------------
-# load all the packages
+## ----purpleair_setup, warning=F, message=F, eval=TRUE-------------------------------------------------------------------
+#' load all the packages
 library(PWFSLSmoke)
 library(AirSensor)
 library(AirMonitorPlots)
 library(MazamaSpatialUtils)
 
 
-## ----get_data, warning=F, message=F, eval=TRUE-------------------------------------------------------------------------
+## ----get_data, warning=F, message=F, eval=TRUE--------------------------------------------------------------------------
+#' assign a name to the new local folder
+archiveBaseDir <- here("data", "Australia_on_fire")
 
-archiveBaseDir <- here("data", "Australia_on_fire") # assign a name to the new local folder
-
-if (file.exists(archiveBaseDir)) { # check if the same-named folder exists
- cat("The folder already exists") # if a same-named folder exists, print the warning
+#' check if the same-named folder exists
+#' if a same-named folder exists, print the warning
+#' if no same-named folder, create the folder
+if (file.exists(archiveBaseDir)) {
+ cat("The folder already exists")
 } else {
- dir.create(archiveBaseDir) # if no same-named folder, create the folder
+ dir.create(archiveBaseDir)
 }
 
-setArchiveBaseDir(archiveBaseDir) # sets the package base directory pointing to an archive of pre-generated data files
+#' set the package base directory to an archive of pre-generated data files 
+setArchiveBaseDir(archiveBaseDir)
 
 
-## ----load_australia_data, warning=F, message=F, eval=TRUE--------------------------------------------------------------
+## ----load_australia_data, warning=F, message=F, eval=TRUE---------------------------------------------------------------
+#' set package data directory
+#' install required spatial data
+#' initialize the package
+
 filePath_pas <- file.path(archiveBaseDir, "pas_au.rda")
-setSpatialDataDir(archiveBaseDir) # set package data directory
-installSpatialData('NaturalEarthAdm1') # install required spatial data
 setSpatialDataDir(archiveBaseDir)
+installSpatialData('NaturalEarthAdm1')
+installSpatialData("CA_AirBasins")
+setSpatialDataDir(archiveBaseDir)
+initializeMazamaSpatialUtils() 
 
-initializeMazamaSpatialUtils() # initialize the package
 
-
-## ----create_pas_au, warning=F, message=F, eval=TRUE--------------------------------------------------------------------
+## ----create_pas_au, warning=F, message=F, eval=TRUE---------------------------------------------------------------------
 #' Download, parse and enhance synoptic data from PurpleAir
 #' and return the results as a useful tibble with class pa_synoptic
-# pas_au <- pas_createNew(countryCodes = "AU", includePWFSL = TRUE) 
-
-# saving and loading the downloaded local file
-# save(pas_au, file = here("data", "pas_au.rda")) # save the synoptic data into an .rda file
-
-pas_au <- get(load(here("data", "pas_au.rda"))) # load data from the .rda file
-
-
-## ----pas_us, warning=F, message=F, eval=TRUE---------------------------------------------------------------------------
-# pas_us <- pas_createNew(countryCodes = "US")
-# pas_tx <- pas_us %>% pas_filter(stateCode=="TX")
+pas_au <- pas_createNew(countryCodes = "AU", includePWFSL = TRUE)
 
 #' saving and loading the downloaded local file
-# save(pas_us, file = here("data", "pas_us.rda")) # save the synoptic data into an .rda file
-# save(pas_tx, file = here("data", "pas_tx.rda")) # save the synoptic data into an .rda file
-pas_us <- get(load(here("data", "pas_us.rda"))) # load data from the .rda file
-pas_tx <- get(load(here("data", "pas_tx.rda"))) # load data from the .rda file
+#' save the synoptic data into an .rda file
+save(pas_au, file = here("data", "pas_au.rda"))
+
+#' load data from the .rda file
+# pas_au <- get(load(here("data", "pas_au.rda"))) 
 
 
-## ----pas_au_leaflet, warning=F, message=F, eval=TRUE-------------------------------------------------------------------
+## ----pas_us, warning=F, message=F, eval=TRUE----------------------------------------------------------------------------
+pas_us <- pas_createNew(countryCodes = "US")
+pas_tx <- pas_us %>% pas_filter(stateCode=="TX")
+
+#' saving and loading the downloaded local file
+#' load data from the .rda file
+save(pas_us, file = here("data", "pas_us.rda"))
+save(pas_tx, file = here("data", "pas_tx.rda"))
+# pas_us <- get(load(here("data", "pas_us.rda")))
+# pas_tx <- get(load(here("data", "pas_tx.rda")))
+
+
+## ----pas_au_leaflet, warning=F, message=F, eval=TRUE--------------------------------------------------------------------
 pas_leaflet(pas_au)
 
 
-## ----pas_tx_leaflet, warning=F, message=F, eval=TRUE-------------------------------------------------------------------
+## ----pas_tx_leaflet, warning=F, message=F, eval=TRUE--------------------------------------------------------------------
 pas_leaflet(pas_tx)
 
 
-## ----humidity_sensor, warning=F, message=F, eval=TRUE------------------------------------------------------------------
+## ----humidity_sensor, warning=F, message=F, eval=TRUE-------------------------------------------------------------------
 pas_au %>% 
   pas_filter(stateCode == "NS") %>% 
   pas_leaflet(parameter = "humidity")
 
 
-## ----texas_pm25_leaflet, warning=F, message=F, eval=TRUE---------------------------------------------------------------
+## ----texas_pm25_leaflet, warning=F, message=F, eval=TRUE----------------------------------------------------------------
 pas_tx %>% 
   pas_leaflet(parameter = "pm25_1hr") 
 
 
-## ----specific_sensor_example1, warning=F, message=F, eval=TRUE---------------------------------------------------------
-gymea_bay_label <- c("Gymea Bay") # Gymea Bay, Sydney, AU (southern Sydney)
-north_sydney_label <- c("Glen Street, Milson’s Point, NSW, Australia") # North Sydney, AU
-brisbane_6th_ave_label <- c("St Lucia - 6th Ave") # Brisbane, AU sensor
+## ----specific_sensor_example1, warning=F, message=F, eval=TRUE----------------------------------------------------------
+gymea_bay_label <- c("Gymea Bay") #' Gymea Bay, Sydney, AU (southern Sydney)
+north_sydney_label <- c("Glen Street, Milson’s Point, NSW, Australia") #' North Sydney, AU
+brisbane_6th_ave_label <- c("St Lucia - 6th Ave") #' Brisbane, AU sensor
 
 #' view unique labels in `pas_au` object
 # unique(pas_au$label)
@@ -193,7 +210,7 @@ pat_gymea_bay <- pat_createNew(
 save(pat_gymea_bay, file = here("data", "pat_gymea_bay.rda"))
 
 
-## ----specific_sensor_example2, warning=F, message=F, eval=TRUE---------------------------------------------------------
+## ----specific_sensor_example2, warning=F, message=F, eval=TRUE----------------------------------------------------------
 pat_north_sydney <- pat_createNew(
     pas = pas_au,
     label = north_sydney_label,
@@ -204,7 +221,7 @@ pat_north_sydney <- pat_createNew(
 save(pat_north_sydney, file = here("data", "pat_north_sydney.rda"))
 
 
-## ----specific_sensor_example3, warning=F, message=F, eval=TRUE---------------------------------------------------------
+## ----specific_sensor_example3, warning=F, message=F, eval=TRUE----------------------------------------------------------
 pat_brisbane_6th_ave <- pat_createNew(
     pas = pas_au, 
     label = brisbane_6th_ave_label, 
@@ -215,19 +232,19 @@ pat_brisbane_6th_ave <- pat_createNew(
 save(pat_brisbane_6th_ave, file = here("data", "pat_brisbane_6th_ave.rda"))
 
 
-## ----pat_gymea_bay, warning=F, message=F, eval=TRUE--------------------------------------------------------------------
+## ----pat_gymea_bay, warning=F, message=F, eval=TRUE---------------------------------------------------------------------
 pat_multiplot(pat_gymea_bay)
 
 
-## ----pat_north_sydney, warning=F, message=F, eval=TRUE-----------------------------------------------------------------
+## ----pat_north_sydney, warning=F, message=F, eval=TRUE------------------------------------------------------------------
 pat_multiplot(pat_north_sydney)
 
 
-## ----pat_brisbane_6th_ave, warning=F, message=F, eval=TRUE-------------------------------------------------------------
+## ----pat_brisbane_6th_ave, warning=F, message=F, eval=TRUE--------------------------------------------------------------
 pat_multiplot(pat_brisbane_6th_ave)
 
 
-## ----pat_houston, warning=F, message=F, eval=TRUE----------------------------------------------------------------------
+## ----pat_houston, warning=F, message=F, eval=TRUE-----------------------------------------------------------------------
 start_date <- 20200101
 end_date <- 20200115
 
@@ -240,12 +257,13 @@ pat_houston <- pat_createNew(label = "Royal Oaks Houston Tx - Outside",
 pat_houston %>%
   pat_multiPlot(plottype = "all")
 
-save(pat_houston, file = here("data", "pat_houston.rda")) # save the synoptic data into an .rda file
+#' save the synoptic data into an .rda file
+save(pat_houston, file = here("data", "pat_houston.rda")) 
 
 
-## ----explore_pas, warning=F, message=F, eval=TRUE----------------------------------------------------------------------
-lon <- pat_gymea_bay$meta$longitude # get the longitude of sensor "Gymea Bay"
-lat <- pat_gymea_bay$meta$latitude # get the latitude of sensor "Gymea Bay"
+## ----explore_pas, warning=F, message=F, eval=TRUE-----------------------------------------------------------------------
+lon <- pat_gymea_bay$meta$longitude #' get the longitude of sensor "Gymea Bay"
+lat <- pat_gymea_bay$meta$latitude #' get the latitude of sensor "Gymea Bay"
 
 pas_sydney <- 
   pas_au %>%
@@ -258,14 +276,15 @@ pas_sydney <-
   ) 
 
 
-## ----explore_pas_sydney, warning=F, message=F, eval=TRUE---------------------------------------------------------------
+## ----explore_pas_sydney, warning=F, message=F, eval=TRUE----------------------------------------------------------------
 pas_leaflet(pas_sydney)
 
 
-## ----explore_pas_texas, warning=F, message=F, eval=FALSE---------------------------------------------------------------
+## ----explore_pas_texas, warning=F, message=F, eval=FALSE----------------------------------------------------------------
 ## library(tidygeocoder)
 ## 
 ## houston_geocode <- geo("Houston, Texas", method = "osm", full_results = TRUE)
+## houston_geocode
 ## 
 ## pas_houston <-
 ##   pas_tx %>%
@@ -278,7 +297,7 @@ pas_leaflet(pas_sydney)
 ##   )
 
 
-## ----graph_pat, warning=F, message=F, eval=TRUE------------------------------------------------------------------------
+## ----graph_pat, warning=F, message=F, eval=TRUE-------------------------------------------------------------------------
 start_date <- 20191210
 end_date <- 20200110
 
@@ -304,12 +323,12 @@ pat_windang <- pat_createNew(
   )
 
 
-## ----graph_pat2, warning=F, message=F, eval=TRUE-----------------------------------------------------------------------
+## ----graph_pat2, warning=F, message=F, eval=TRUE------------------------------------------------------------------------
 colors <- c("Chisholm" = "#1b9e77", 
             "Moruya" = "#d95f02", 
             "Windang" = "#7570b3")
 
-gg <- ggplot(data = pat_chisholm$data) +
+multisensor_pm25_plot <- ggplot(data = pat_chisholm$data) +
   geom_point(aes(x = pat_chisholm$data$datetime, 
                  y = pat_chisholm$data$pm25_A, 
                  color = "Chisholm"), alpha = 0.5) +
@@ -328,15 +347,15 @@ gg <- ggplot(data = pat_chisholm$data) +
   theme(legend.position= c(0.9, 0.8))
 
 
-## ----graph_pat3, warning=F, message=F, eval=TRUE-----------------------------------------------------------------------
-print(gg)
+## ----graph_pat3, warning=F, message=F, eval=TRUE------------------------------------------------------------------------
+print(multisensor_pm25_plot)
 
 
-## ----explore_chisholm_area_sensors, warning=FALSE, message=FALSE, eval=FALSE, include=FALSE----------------------------
+## ----explore_chisholm_area_sensors, warning=FALSE, message=FALSE, eval=FALSE, include=FALSE-----------------------------
 ## NA
 
 
-## ----explore_houston_area_pat, warning=FALSE, message=FALSE, eval=TRUE-------------------------------------------------
+## ----explore_houston_area_pat, warning=FALSE, message=FALSE, eval=TRUE--------------------------------------------------
 pasadena_ids <- c("98633", "99813")
 houston_ids <- c("26659", "133994")
 
@@ -344,16 +363,16 @@ pas_tx %>%
   filter(ID %in% pasadena_ids | ID %in% houston_ids)
 
 
-## ----dailySoHIndexPlot, warning=FALSE, message=FALSE, eval=TRUE--------------------------------------------------------
+## ----dailySoHIndexPlot, warning=FALSE, message=FALSE, eval=TRUE---------------------------------------------------------
 pat_dailySoHIndexPlot(pat_chisholm)
 
 
-## ----------------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------------
 
 
 
-## ----air_sensor_objects, warning=FALSE, message=FALSE, eval=TRUE-------------------------------------------------------
-# create an airsensor object
+## ----air_sensor_objects, warning=FALSE, message=FALSE, eval=TRUE--------------------------------------------------------
+#' create an airsensor object
 airsensor_chisholm <- pat_createAirSensor(
   pat = pat_chisholm,
   parameter = "pm25",
@@ -367,19 +386,19 @@ airsensor_houston <- pat_createAirSensor(
 )
 
 
-## ----air_monitor_plots, warning=FALSE, message=FALSE, eval=TRUE--------------------------------------------------------
+## ----air_monitor_plots, warning=FALSE, message=FALSE, eval=TRUE---------------------------------------------------------
 AirMonitorPlots::monitor_ggDailyBarplot(airsensor_chisholm)
 
 
-## ----pollution_rose, warning=FALSE, message=FALSE, eval=TRUE-----------------------------------------------------------
+## ----pollution_rose, warning=FALSE, message=FALSE, eval=TRUE------------------------------------------------------------
 sensor_pollutionRose(sensor = airsensor_chisholm)
 
 
-## ----comp, warning=F, message=F, eval=TRUE-----------------------------------------------------------------------------
+## ----comp, warning=F, message=F, eval=TRUE------------------------------------------------------------------------------
 sensor_pollutionRose(sensor = airsensor_houston)
 
 
-## ----save_analysis, warning=F, message=F, eval=TRUE, include=FALSE-----------------------------------------------------
+## ----save_analysis, warning=F, message=F, eval=TRUE, include=FALSE------------------------------------------------------
 save.image(here("rdata", "intro_to_api_workshop.RData"), compress = TRUE)
 # rm(list=ls("socrata_app_credentials", "purpleair_api_credentials"))
 # knitr::purl("markdown/intro_to_api_workshop.Rmd", "code/intro_to_api_workshop.R")

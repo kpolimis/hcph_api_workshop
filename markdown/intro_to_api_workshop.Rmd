@@ -72,7 +72,7 @@ always_allow_html: yes
 :::
 
 ::: {.column}
-![](../images/kivan_headshot.png)
+![](../images/kivan_headshot.png){height=800px; width=600px}
 :::
 ::::::::::::
 
@@ -88,6 +88,20 @@ In plain English, an API is a standard way for developers to communicate with so
 
 1. formal syntax that governs communication between software and
 2. the software itself
+
+# TL;DR
+
+* What:
+  + APIs are a way for devices and developers to programmatically exchange information
+  + APIs exist for nearly every service
+* Why:
+  + Use APIs for automated data management and bespoke software solutions
+* When:
+  + If a software package exists to access a service, it is using the API
+    + and beats writing your own code
+  + If the service has an API and no package, that's the next tier   
+  + Bottom rung is no API, learn to scrape.
+  + Garbage tier is no API and anti-scrape protection (aka FUN)
 
 # What is an API?
 
@@ -105,13 +119,13 @@ In plain English, an API is a standard way for developers to communicate with so
 
 1. APIs cut down on development time and costs
 
-"We live in the world of API economy, where new software is built by leveraging many different commercial or open source software components," says Singh of OpsRamp. "For example, Uber uses a variety of software systems for things like payment, location, maps, and traffic, all of which rely on APIs to communicate."
+"We live in the world of API economy, where new software is built by leveraging many different commercial or open source software components," says [Bhanu] Singh [VP of Engineering] of OpsRamp. "For example, Uber uses a variety of software systems for things like payment, location, maps, and traffic, all of which rely on APIs to communicate."
 
 # Why use an API (Business Case)
 
 2. APIs reduce complexity
 
-"Without APIs, developers would need to have intimate knowledge of the internal workings of an application to be able to extend its functionality," says Sullivan at SnapRoute. "Instead, APIs give developers a way of collaborating to build more intricate systems of applications without having to work for the same company or even know each other
+"Without APIs, developers would need to have intimate knowledge of the internal workings of an application to be able to extend its functionality," says [Glenn] Sullivan [co-founder] at SnapRoute. "Instead, APIs give developers a way of collaborating to build more intricate systems of applications without having to work for the same company or even know each other
 
 # Why use an API (Business Case)
 
@@ -308,10 +322,12 @@ library(here)
 
 # Census API Examples
 
-* will only run if you have an appropriately formatted filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
+* will only run if you have an appropriately formatted file, `credentials/socrata_app_credentials.yml`, with valid CDC API credentials
 * see `credentials/example_socrata_app_credentials.yml` for the 3 essential fields in the .yml file
 
 ```{r socrata, warning=F, message=F, eval=TRUE}
+ #' will only run if you have an appropriately formatted file,
+ #' `credentials/socrata_app_credentials.yml` with valid CDC API credential
 socrata_app_credentials <- yaml.load_file(here("credentials/socrata_app_credentials.yml"))
 
 #' Yearly Counts of Deaths by State and Select Causes, 1999-2017
@@ -338,9 +354,11 @@ https://data.cdc.gov/resource/bi63-dtpu.json
 
 # Census API Examples
 
-* will only run if you have an appropriately formatted filed `credentials/socrata_app_credentials.yml` with valid CDC API credentials
+* will only run if you have an appropriately formatted file, `credentials/socrata_app_credentials.yml`, with valid CDC API credentials
 
 ```{r source_nchs_mortality, warning=F, message=F, eval=TRUE}
+#' will only run if you have an appropriately formatted file, 
+#' `credentials/socrata_app_credentials.yml`, with valid CDC API credentials
 source(here("code", "01_get_nchs_mortality.R"))
 ```
 
@@ -431,10 +449,12 @@ https://map.purpleair.com/1/mAQI/a10/p604800/cC0#9.72/29.785/-95.3946
 
 * https://community.purpleair.com/t/making-api-calls-with-the-purpleair-api/180
 * https://api.purpleair.com/#api-sensors-get-sensor-data
-* will only run if you have an appropriately formatted filed `credentials/purpleair_api_credentials.yml` with valid PurpleAir API credentials
+* will only run if you have an appropriately formatted file, `credentials/purpleair_api_credentials.yml`, with valid PurpleAir API credentials
 * see `credentials/example_purpleair_api_credentials.yml` for the 2 essential fields in the .yml file
 
 ```{r purpleair_api_manual, warning=F, message=F, eval=TRUE}
+#' will only run if you have an appropriately formatted file,
+#' `credentials/purpleair_api_credentials.yml`, with valid PurpleAir API credentials
 require(httr)
 
 purpleair_api_credentials <- yaml.load_file(here("credentials/purpleair_api_credentials.yml"))
@@ -488,9 +508,11 @@ https://github.com/MazamaScience/AirSensor
 
 # R's AirSensor Package
 
-The goal of this section is to demonstrate the use of the **AirSensor** package to explore the smoke impacts of the December 2019 - January 2020 fires and smoke in Australia. This document demonstrates "reproducible research" in that no pre-generated files are needed. Raw data from `PurpleAir` will be downloaded and processed when this script is first run.
-
-In this document we will use the term "sensor" to refer to consumer-grade, PurpleAir air quality sensors sampling at a high time resolution. The term "monitor" will refer to professional-grade, typically government managed 
+* The goal of this section is to demonstrate the use of the **AirSensor** package to explore the smoke impacts of the December 2019 - January 2020 fires and smoke in Australia. 
+* This section demonstrates "reproducible research" in that no pre-generated files are needed
+  + Raw data from `PurpleAir` will be downloaded and processed when this script is first run.
+* In this section, we will use the term "sensor" to refer to consumer-grade, PurpleAir air quality sensors sampling at a high time resolution. 
+* The term "monitor" will refer to professional-grade, typically government managed 
 monitors with hourly data.
 
 # R's AirSensor Package
@@ -524,7 +546,7 @@ Install and load relevant packages:
 Note that package `AirMonitorPlots` might not yet be available on CRAN. To install, try the `devtools` package (see `code/install.R`)
 
 ```{r purpleair_setup, warning=F, message=F, eval=TRUE}
-# load all the packages
+#' load all the packages
 library(PWFSLSmoke)
 library(AirSensor)
 library(AirMonitorPlots)
@@ -539,46 +561,57 @@ The `AirSensor` package needs to know where processed data will live. For this r
 # Getting the data
 
 ```{r get_data, warning=F, message=F, eval=TRUE}
+#' assign a name to the new local folder
+archiveBaseDir <- here("data", "Australia_on_fire")
 
-archiveBaseDir <- here("data", "Australia_on_fire") # assign a name to the new local folder
-
-if (file.exists(archiveBaseDir)) { # check if the same-named folder exists
- cat("The folder already exists") # if a same-named folder exists, print the warning
+#' check if the same-named folder exists
+#' if a same-named folder exists, print the warning
+#' if no same-named folder, create the folder
+if (file.exists(archiveBaseDir)) {
+ cat("The folder already exists")
 } else {
- dir.create(archiveBaseDir) # if no same-named folder, create the folder
+ dir.create(archiveBaseDir)
 }
 
-setArchiveBaseDir(archiveBaseDir) # sets the package base directory pointing to an archive of pre-generated data files
+#' set the package base directory to an archive of pre-generated data files 
+setArchiveBaseDir(archiveBaseDir)
 ```
 
 # Load synoptic data for Australia
 
-We will use the `pas_createNew()` function to create a *pas* object containing all the spatial metadata associated with purple air monitors in Australia. 
+We will use the `pas_createNew()` function to create a *pas* object containing all the spatial metadata associated with purple air monitors in Australia.
 
-To create a new `pas` object you must first properly initialize the `MazamaSpatialUtils` package. 
+To create a new `pas` object you must first properly initialize the `MazamaSpatialUtils` package.
 
 ```{r load_australia_data, warning=F, message=F, eval=TRUE}
-filePath_pas <- file.path(archiveBaseDir, "pas_au.rda")
-setSpatialDataDir(archiveBaseDir) # set package data directory
-installSpatialData('NaturalEarthAdm1') # install required spatial data
-setSpatialDataDir(archiveBaseDir)
+#' set package data directory
+#' install required spatial data
+#' initialize the package
 
-initializeMazamaSpatialUtils() # initialize the package
+filePath_pas <- file.path(archiveBaseDir, "pas_au.rda")
+setSpatialDataDir(archiveBaseDir)
+installSpatialData('NaturalEarthAdm1')
+installSpatialData("CA_AirBasins")
+setSpatialDataDir(archiveBaseDir)
+initializeMazamaSpatialUtils() 
 ```
 
 # Load synoptic data for Australia
 
-Now we create the `pas` object and save it into an .rda file. This can take up to a minute to process. 
+* Now we create the `pas` object and save it into an .rda file
+  + this can take up to a minute to process 
 
 ```{r create_pas_au, warning=F, message=F, eval=TRUE}
 #' Download, parse and enhance synoptic data from PurpleAir
 #' and return the results as a useful tibble with class pa_synoptic
-# pas_au <- pas_createNew(countryCodes = "AU", includePWFSL = TRUE) 
+# pas_au <- pas_createNew(countryCodes = "AU", includePWFSL = TRUE)
 
-# saving and loading the downloaded local file
-# save(pas_au, file = here("data", "pas_au.rda")) # save the synoptic data into an .rda file
+#' saving and loading the downloaded local file
+#' save the synoptic data into an .rda file
+# save(pas_au, file = here("data", "pas_au.rda"))
 
-pas_au <- get(load(here("data", "pas_au.rda"))) # load data from the .rda file
+#' load data from the .rda file
+pas_au <- get(load(here("data", "pas_au.rda")))
 ```
 
 # Load synoptic data for Australia
@@ -596,10 +629,11 @@ It is important to note that the data averages in the pas object – the numeric
 # pas_tx <- pas_us %>% pas_filter(stateCode=="TX")
 
 #' saving and loading the downloaded local file
-# save(pas_us, file = here("data", "pas_us.rda")) # save the synoptic data into an .rda file
-# save(pas_tx, file = here("data", "pas_tx.rda")) # save the synoptic data into an .rda file
-pas_us <- get(load(here("data", "pas_us.rda"))) # load data from the .rda file
-pas_tx <- get(load(here("data", "pas_tx.rda"))) # load data from the .rda file
+#' load data from the .rda file
+# save(pas_us, file = here("data", "pas_us.rda"))
+# save(pas_tx, file = here("data", "pas_tx.rda"))
+pas_us <- get(load(here("data", "pas_us.rda")))
+pas_tx <- get(load(here("data", "pas_tx.rda")))
 ```
 
 # View a *pas* map
@@ -615,7 +649,7 @@ pas_leaflet(pas_au)
 pas_leaflet(pas_tx)
 ```
 
-We can also explore and utilize other PurpleAir sensor data. Check the `pas_leaflet()` documentation for all supported parameters. By default, `pas_leaflet()` will map the coordinates of each PurpleAir sensor and the hourly PM2.5 data. 
+We can also explore and utilize other PurpleAir sensor data. Check the `pas_leaflet()` documentation for all supported parameters. By default, `pas_leaflet()` will map the coordinates of each PurpleAir sensor and the hourly PM2.5 data.
 
 # View a *pas* map
 
@@ -637,7 +671,7 @@ pas_tx %>%
 
 # Load time series data for a sensor
 
-PurpleAir sensor readings are uploaded to the cloud every 120 seconds where they are stored for download and display on the PurpleAir website. After every interval, the synoptic data is refreshed and the outdated synoptic data is then stored in a *ThingSpeak* database. In order to access the *ThingSpeak* channel API we must first load the synoptic database. 
+PurpleAir sensor readings are uploaded to the cloud every 120 seconds where they are stored for download and display on the PurpleAir website. After every interval, the synoptic data is refreshed and the outdated synoptic data is then stored in a *ThingSpeak* database. In order to access the *ThingSpeak* channel API we must first load the synoptic database.
 
 # ThingSpeak API
 
@@ -653,9 +687,9 @@ Let’s look at data from multiple sensors in the Sydney area and one from Brisb
 # Load time series data for a sensor
 
 ```{r specific_sensor_example1, warning=F, message=F, eval=TRUE}
-gymea_bay_label <- c("Gymea Bay") # Gymea Bay, Sydney, AU (southern Sydney)
-north_sydney_label <- c("Glen Street, Milson’s Point, NSW, Australia") # North Sydney, AU
-brisbane_6th_ave_label <- c("St Lucia - 6th Ave") # Brisbane, AU sensor
+gymea_bay_label <- c("Gymea Bay") #' Gymea Bay, Sydney, AU (southern Sydney)
+north_sydney_label <- c("Glen Street, Milson’s Point, NSW, Australia") #' North Sydney, AU
+brisbane_6th_ave_label <- c("St Lucia - 6th Ave") #' Brisbane, AU sensor
 
 #' view unique labels in `pas_au` object
 # unique(pas_au$label)
@@ -743,7 +777,8 @@ pat_houston <- pat_createNew(label = "Royal Oaks Houston Tx - Outside",
 pat_houston %>%
   pat_multiPlot(plottype = "all")
 
-save(pat_houston, file = here("data", "pat_houston.rda")) # save the synoptic data into an .rda file
+#' save the synoptic data into an .rda file
+save(pat_houston, file = here("data", "pat_houston.rda")) 
 ```
 
 # Explore the *pas* object
@@ -751,8 +786,8 @@ save(pat_houston, file = here("data", "pat_houston.rda")) # save the synoptic da
 For the purposes of this exploratory example, we are focusing on Australia but maybe we want to filter even more and just look at the sensors within a certain radius of the one we chose in Sydney.
 
 ```{r explore_pas, warning=F, message=F, eval=TRUE}
-lon <- pat_gymea_bay$meta$longitude # get the longitude of sensor "Gymea Bay"
-lat <- pat_gymea_bay$meta$latitude # get the latitude of sensor "Gymea Bay"
+lon <- pat_gymea_bay$meta$longitude #' get the longitude of sensor "Gymea Bay"
+lat <- pat_gymea_bay$meta$latitude #' get the latitude of sensor "Gymea Bay"
 
 pas_sydney <- 
   pas_au %>%
@@ -779,6 +814,7 @@ pas_leaflet(pas_sydney)
 library(tidygeocoder)
 
 houston_geocode <- geo("Houston, Texas", method = "osm", full_results = TRUE)
+houston_geocode
 
 pas_houston <- 
   pas_tx %>%
@@ -832,7 +868,7 @@ colors <- c("Chisholm" = "#1b9e77",
             "Moruya" = "#d95f02", 
             "Windang" = "#7570b3")
 
-gg <- ggplot(data = pat_chisholm$data) +
+multisensor_pm25_plot <- ggplot(data = pat_chisholm$data) +
   geom_point(aes(x = pat_chisholm$data$datetime, 
                  y = pat_chisholm$data$pm25_A, 
                  color = "Chisholm"), alpha = 0.5) +
@@ -854,7 +890,7 @@ gg <- ggplot(data = pat_chisholm$data) +
 # Explore the *pat* object
 
 ```{r graph_pat3, warning=F, message=F, eval=TRUE}
-print(gg)
+print(multisensor_pm25_plot)
 ```
 
 # Explore the *pat* object
@@ -905,7 +941,7 @@ Another way to look at the PurpleAir sensor data is to convert the `pat` into an
 Because we are dealing with values far outside the norm, we will use the `PurpleAirQC_hourly_AB_00` function which performs minimal quality control. See [RDocumentation](https://cran.r-project.org/web/packages/AirSensor/AirSensor.pdf) of the package for more details. 
 
 ```{r air_sensor_objects, warning=FALSE, message=FALSE, eval=TRUE}
-# create an airsensor object
+#' create an airsensor object
 airsensor_chisholm <- pat_createAirSensor(
   pat = pat_chisholm,
   parameter = "pm25",
@@ -920,6 +956,7 @@ airsensor_houston <- pat_createAirSensor(
 ```
 
 # Advanced plotting
+
 Now that we have converted the relative raw `pas` into an `airsensor` object, we can use any of the "monitor" plotting functions found in the `PWFSLSmoke` or `AirMonitorPlots` packages. 
 
 ```{r air_monitor_plots, warning=FALSE, message=FALSE, eval=TRUE}
@@ -959,12 +996,15 @@ In this Intro to API workshop we (hopefully)
 
 * Learned what an API is
 * Accessed multiple APIs and registered to get API keys
-* Retrieved mortality data from the CDC's API
+* Retrieved mortality data
+  + from the CDC's API
+  + from PurpleAir's API
 * Used R's `AirSensor` package to investigate air monitor quality data
 
 # 6. References
 
 * [Amazon Web Services](https://aws.amazon.com/what-is/api/)
+* [The Enterprisers Project](https://enterprisersproject.com/article/2018/11/how-explain-apis-plain-english?sc_cid=701f2000000tpAgAAI&page=0%2C1%2C0)
 * [Getting started with JSON and jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html)
 * [Getting started with httr](https://cran.r-project.org/web/packages/httr/vignettes/quickstart.html)
 * [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html)
