@@ -1,6 +1,8 @@
 # Harris County Public Health Data Workshop 
 ## Introduction to Application Programming Interfaces (APIs)
 
+![](images/public_health_data_workshop.png){height=400px; width=400px}
+
 ## Directory guide
 
 folder | contents
