@@ -1,7 +1,7 @@
 # Harris County Public Health Data Workshop 
 ## Introduction to Application Programming Interfaces (APIs)
 
-![](images/public_health_data_workshop.png){height=400px; width=400px}
+![](images/public_health_data_workshop.png)
 
 ## Directory guide
 
@@ -17,3 +17,7 @@ folder | contents
 ## Software
 
 R version 4.1.2 (2021-11-01) -- "Bird Hippie"
+
+# Last Updated
+
+2022-04-14
