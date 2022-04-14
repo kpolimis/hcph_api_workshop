@@ -25,7 +25,7 @@ always_allow_html: yes
 
 - Introductions
 - What is an API?
-- Census Mortality API
+- CDC API
 - PurpleAir API
 - Conclusion
 - References
@@ -136,7 +136,7 @@ APIs have helped enable the automation boom in the software pipeline and elsewhe
 # Why use an API (Research Case)
 
 * APIs encourage innovation and collaboration by allowing stakeholders to easily and securely access data
-* APIs introduce good practice to data management and reduces the risk of reputational damage from inaccurate data
+* APIs introduce good data management practices and reduce the risk of reputational damage from inaccurate data
 
 # How do I use APIs?
 
@@ -270,10 +270,9 @@ New web APIs can be found on API marketplaces and API directories.
 * APIForThat and APIList
   + Both these websites have lists of 500+ web APIs, along with in-depth information on how to use them.
 
-
-# 3. Census Mortality API
+# 3. CDC API
 - Open Data Introduction
-- Census API Examples
+- CDC API Examples
 
 # Open Data
 
@@ -297,25 +296,25 @@ https://socrataapikeys.docs.apiary.io/#introduction/why-use-api-keys?
 
 https://dev.socrata.com/docs/authentication.html
 
-#  Census API Introduction
+#  CDC API Introduction
 
 * https://data.cdc.gov/signup
 
 ![](../images/cdc_api_signup.png){height=1000px; width=800px}
 
-#  Census API Introduction
+#  CDC API Introduction
 
 * https://support.socrata.com/hc/en-us/articles/210138558-Generating-an-App-Token
 
 ![](../images/socrata_api_credentials.png){height=1000px; width=800px}
 
-#  Census API Introduction
+#  CDC API Introduction
 
 * https://support.socrata.com/hc/en-us/articles/210138558-Generating-an-App-Token
 
 ![](../images/socrata_new_app.png){height=1000px; width=800px}
 
-# Census API Examples
+# CDC API Examples
 
 ```{r rsocrata_setup, warning=F, message=F, eval=TRUE}
 library(yaml)
@@ -326,7 +325,7 @@ library(RSocrata)
 library(here)
 ```
 
-# Census API Examples
+# CDC API Examples
 
 * will only run if you have an appropriately formatted file, `credentials/socrata_app_credentials.yml`, with valid CDC API credentials
 * see `credentials/example_socrata_app_credentials.yml` for the 3 essential fields in the .yml file
@@ -346,19 +345,19 @@ yearly_deaths_by_state_1999_2017 <- read.socrata(
 )
 ```
 
-# Census API Examples
+# CDC API Examples
 
 ```{r socrata_glimpse, warning=F, message=F, eval=TRUE}
 glimpse(yearly_deaths_by_state_1999_2017)
 ```
 
-# Census API Examples
+# CDC API Examples
 
 https://data.cdc.gov/resource/bi63-dtpu.json
 
 ![](../images/cdc_deaths_json.png){height=1000px; width=800px}
 
-# Census API Examples
+# CDC API Examples
 
 * will only run if you have an appropriately formatted file, `credentials/socrata_app_credentials.yml`, with valid CDC API credentials
 
@@ -368,7 +367,7 @@ https://data.cdc.gov/resource/bi63-dtpu.json
 source(here("code", "01_get_nchs_mortality.R"))
 ```
 
-# Census API Examples
+# CDC API Examples
 
 ```{r us_deaths_time_series_prep, warning=F, message=F, eval=TRUE}
 library(lubridate)
@@ -393,7 +392,7 @@ us_deaths_time_series <- ggplot(data = yearly_deaths_by_state_1999_2022 %>%
   annotate(x=ymd("2019-12-01"),y=+Inf,label="COVID-19",vjust=1,geom="label")
 ```
 
-# Census API Examples
+# CDC API Examples
 
 ```{r us_deaths_time_series_plot, warning=F, message=F, eval=TRUE}
 print(us_deaths_time_series)
