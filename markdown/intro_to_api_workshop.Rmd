@@ -229,9 +229,13 @@ REST APIs offer four main benefits:
 # What are the benefits of REST APIs?
 
 3. Expansion
-  + APIs present a unique opportunity for businesses to meet their clients’ needs across different platforms. For example, maps API allows map information integration via websites, Android,iOS, etc. Any business can give similar access to their internal databases by using free or paid APIs.
+  + APIs present a unique opportunity for businesses to meet their clients’ needs across different platforms.
+    + For example, maps API allows map information integration via websites, Android, iOS, etc.
+    + Any business can give similar access to their internal databases by using free or paid APIs.
 4. Ease of maintenance
-  + The API acts as a gateway between two systems. Each system is obliged to make internal changes so that the API is not impacted. This way, any future code changes by one party do not impact the other party.
+  + The API acts as a gateway between two systems.
+  + Each system is obliged to make internal changes so that the API is not impacted.
+    + This way, any future code changes by one party do not impact the other party.
 
 # How to use an API?
 
@@ -397,6 +401,7 @@ ggsave(here("output/us_deaths_time_series.png"),
 
 # 4. PurpleAir
 
+- Air Pollution Introduction
 - PurpleAir Introduction
 - PurpleAir API Introduction
 - R's AirSensor Package
@@ -404,6 +409,57 @@ ggsave(here("output/us_deaths_time_series.png"),
   + Explore the pas object
   + Explore the pat data
   + Working with air sensor data
+
+
+# Air Pollution Introduction
+
+* from: The [World Health Organization](https://www.who.int/health-topics/air-pollution#tab=tab_1)
+
+* Air pollution kills an estimated seven million people worldwide every year.
+  + WHO data shows that almost all of the global population (99%) breathe air that exceeds WHO guideline limits containing high levels of pollutants, with low- and middle-income countries suffering from the highest exposures.
+* From smog hanging over cities to smoke inside the home, air pollution poses a major threat to health and climate.
+  + The combined effects of ambient (outdoor) and household air pollution cause millions of premature deaths every year
+    + largely as a result of increased mortality from stroke, heart disease, chronic obstructive pulmonary disease, lung cancer and acute respiratory infections.
+
+# Air Pollution Introduction
+
+from: [Harvard School of Public Health](https://www.hsph.harvard.edu/c-change/news/fossil-fuel-air-pollution-responsible-for-1-in-5-deaths-worldwide/)
+
+![](../images/hsph_pollution_stats.png){height=1500px; width=1200px}
+
+
+# Air Pollution Introduction
+
+* [The effects of increased pollution on COVID-19 cases and deaths](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7899033/)
+
+
+from: [Harvard School of Public Health](https://www.hsph.harvard.edu/news/hsph-in-the-news/air-pollution-linked-with-higher-covid-19-death-rates/)
+
+![](../images/hsph_pollution_covid.png){height=1500px; width=1200px}
+
+# Air Pollution Introduction
+
+[Tyler Cowen on Bloomberg](https://www.bloomberg.com/opinion/articles/2021-03-10/air-pollution-kills-far-more-people-than-covid-ever-will)
+
+![](../images/tyler_cowen_headline.png){height=1500px; width=1200px}
+
+# Air Pollution Introduction
+
+Houston Chronicle: [Houston’s dangerous concrete plants are mostly in communities of color. Residents are fighting back.](https://www.houstonchronicle.com/news/houston-texas/environment/article/Houston-s-dangerous-concrete-plants-are-mostly-17067357.php)
+
+![](../images/houston_chronicle_enviro_injustice.png){height=1500px; width=1200px}
+
+# Air Pollution Introduction
+
+[Pollution Control Services Department](https://pcs.harriscountytx.gov/Pages/default.aspx)
+
+![](../images/hc_camp.png){height=1500px; width=1200px}
+
+# Air Pollution Introduction
+
+[Mobile Monitoring Data](https://pcs.harriscountytx.gov/Pages/MobileMonitoringData.aspx)
+
+![](../images/hcpcs_air_monitoring.png){height=1500px; width=1200px}
 
 # PurpleAir Introduction
 
@@ -413,7 +469,7 @@ ggsave(here("output/us_deaths_time_series.png"),
 
 # PurpleAir Introduction
 
-https://www.nbcnews.com/tech/tech-news/high-tech-california-relies-startup-utah-see-how-smoky-its-n1074906
+[NBC News](https://www.nbcnews.com/tech/tech-news/high-tech-california-relies-startup-utah-see-how-smoky-its-n1074906)
 
 ![](../images/purpleair_nbc_news.png){height=1500px; width=1200px}
 
@@ -695,10 +751,10 @@ brisbane_6th_ave_label <- c("St Lucia - 6th Ave") #' Brisbane, AU sensor
 # unique(pas_au$label)
 
 pat_gymea_bay <- pat_createNew(
-    pas = pas_au, 
-    label = gymea_bay_label, 
-    startdate = 20191229, 
-    enddate = 20200110
+  pas = pas_au,
+  label = gymea_bay_label,
+  startdate = 20191229,
+  enddate = 20200110
   )
 
 save(pat_gymea_bay, file = here("data", "pat_gymea_bay.rda"))
@@ -708,10 +764,10 @@ save(pat_gymea_bay, file = here("data", "pat_gymea_bay.rda"))
 
 ```{r specific_sensor_example2, warning=F, message=F, eval=TRUE}
 pat_north_sydney <- pat_createNew(
-    pas = pas_au,
-    label = north_sydney_label,
-    startdate = 20191229,
-    enddate = 20200110
+  pas = pas_au,
+  label = north_sydney_label,
+  startdate = 20191229,
+  enddate = 20200110
   )
 
 save(pat_north_sydney, file = here("data", "pat_north_sydney.rda"))
@@ -721,10 +777,10 @@ save(pat_north_sydney, file = here("data", "pat_north_sydney.rda"))
 
 ```{r specific_sensor_example3, warning=F, message=F, eval=TRUE}
 pat_brisbane_6th_ave <- pat_createNew(
-    pas = pas_au, 
-    label = brisbane_6th_ave_label, 
-    startdate = 20191229, 
-    enddate = 20200110
+  pas = pas_au,
+  label = brisbane_6th_ave_label,
+  startdate = 20191229,
+  enddate = 20200110
   )
 
 save(pat_brisbane_6th_ave, file = here("data", "pat_brisbane_6th_ave.rda"))
@@ -768,11 +824,12 @@ pat_multiplot(pat_brisbane_6th_ave)
 start_date <- 20200101
 end_date <- 20200115
 
-pat_houston <- pat_createNew(label = "Royal Oaks Houston Tx - Outside",
-                     pas = pas_tx,
-                     startdate = start_date,
-                     enddate = end_date
-                     )
+pat_houston <- pat_createNew(
+  label = "Royal Oaks Houston Tx - Outside",
+   pas = pas_tx,
+   startdate = start_date,
+   enddate = end_date
+  )
 
 pat_houston %>%
   pat_multiPlot(plottype = "all")
@@ -928,7 +985,7 @@ pat_dailySoHIndexPlot(pat_chisholm)
 
 
 **Plot and evaluate the state-of-health for a Houston area sensor we just looked at.**
-```{r}
+```{r houston_sensor_example, warning=FALSE, message=FALSE, eval=TRUE, include=FALSE}
 
 ```
 
@@ -988,6 +1045,7 @@ sensor_pollutionRose(sensor = airsensor_houston)
 
 ```{r save_analysis, warning=F, message=F, eval=TRUE, include=FALSE}
 save.image(here("rdata", "intro_to_api_workshop.RData"), compress = TRUE)
+# load(here("rdata", "intro_to_api_workshop.RData"))
 # rm(list=ls("socrata_app_credentials", "purpleair_api_credentials"))
 # knitr::purl("markdown/intro_to_api_workshop.Rmd", "code/intro_to_api_workshop.R")
 ```
