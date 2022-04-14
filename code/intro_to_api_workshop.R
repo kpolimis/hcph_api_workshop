@@ -18,6 +18,7 @@ json <-
 
 prettify(json, indent = 4)
 
+json_df <- fromJSON(json)
 
 ## ----rsocrata_setup, warning=F, message=F, eval=TRUE--------------------------------------------------------------------
 library(yaml)
@@ -89,12 +90,16 @@ require(httr)
 
 purpleair_api_credentials <- yaml.load_file(here("credentials/purpleair_api_credentials.yml"))
 
-headers = c(
+headers <- c(
   `X-API-Key` = purpleair_api_credentials$read_key
 )
 
-result <- httr::GET(url = 'https://api.purpleair.com/v1/sensors/25999', httr::add_headers(.headers=headers))
+base_url <- "https://api.purpleair.com/v1/sensors/"
+# sensor <- "48545" # Museum District, Houston, Texas
+sensor <- "25999" # Villages Of Bridgestone, Spring, TX,
+sensor_url <- paste0(base_url, sensor)
 
+result <- httr::GET(url = sensor_url, httr::add_headers(.headers=headers))
 
 ## ----purpleair_api_result, warning=F, message=F, eval=TRUE--------------------------------------------------------------
 result
