@@ -1,4 +1,5 @@
 if (!require("pacman")) install.packages("pacman")
+if (!require("devtools")) install.packages("devtools")
 if (!require("BiocManager")) install.packages("BiocManager")
 library(pacman)
 library(BiocManager)
